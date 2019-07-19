@@ -1,9 +1,10 @@
 {
     "name": "woodlsy/pay",
-    "description": "aliPay,weixinPay,lianlianPay",
+    "description": "aliPay,weixinPay",
     "type": "library",
     "require": {
         "php": ">=7.0.0"
+		"woodlsy/http-client": ">=0.1"
     },
     "license": "MIT",
     "minimum-stability": "dev",
