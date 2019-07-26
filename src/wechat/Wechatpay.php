@@ -33,6 +33,7 @@ class Wechatpay
             if (isset($this->config['app_id'])) $this->setAppId($this->config['app_id']);
             if (isset($this->config['mch_id'])) $this->setMchId($this->config['mch_id']);
             if (isset($this->config['key'])) $this->setAppKey($this->config['key']);
+            if (isset($this->config['notify_url'])) $this->setNotifyUrl($this->config['notify_url']);
         }
     }
 
