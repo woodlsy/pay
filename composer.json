@@ -3,7 +3,7 @@
     "description": "aliPay,weixinPay",
     "type": "library",
     "require": {
-        "php": ">=7.0.0"
+        "php": ">=7.0.0",
 		"woodlsy/http-client": ">=0.1"
     },
     "license": "MIT",
