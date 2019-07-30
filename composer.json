@@ -3,6 +3,10 @@
     "description": "aliPay,weixinPay",
     "type": "library",
     "require": {
+        "ext-json": "*",
+        "ext-openssl": "*",
+        "ext-curl": "*",
+        "ext-mbstring": "*",
         "php": ">=7.0.0",
 		"woodlsy/http-client": ">=0.1"
     },

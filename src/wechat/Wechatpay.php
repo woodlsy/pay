@@ -15,9 +15,15 @@ class Wechatpay
 
     private $config;
 
+    private $signType = 'HMAC-SHA256';
+
     public function __construct(array $config = null)
     {
         $this->config = $config;
+        if (null !== $this->config) {
+            if (isset($this->config['key'])) $this->setAppKey($this->config['key']);
+            if (isset($this->config['sign_type'])) $this->setSignType($this->config['sign_type']);
+        }
     }
 
     /**
@@ -32,7 +38,6 @@ class Wechatpay
         if (null !== $this->config) {
             if (isset($this->config['app_id'])) $this->setAppId($this->config['app_id']);
             if (isset($this->config['mch_id'])) $this->setMchId($this->config['mch_id']);
-            if (isset($this->config['key'])) $this->setAppKey($this->config['key']);
             if (isset($this->config['notify_url'])) $this->setNotifyUrl($this->config['notify_url']);
         }
     }
@@ -147,6 +152,7 @@ class Wechatpay
     public function setSignType(string $signType) : Wechatpay
     {
         $this->obj->signType = $signType;
+        $this->signType = $signType;
         return $this;
     }
 
@@ -277,6 +283,13 @@ class Wechatpay
         return $xml;
     }
 
+    /**
+     * xml转换为数组
+     *
+     * @author yls
+     * @param string $xml
+     * @return mixed
+     */
     public function fromXml(string $xml)
     {
         //将XML转为array
@@ -284,5 +297,20 @@ class Wechatpay
         libxml_disable_entity_loader(true);
         $values = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
         return $values;
+    }
+
+    /**
+     * 验签
+     *
+     * @author yls
+     * @param array $params
+     * @return bool
+     */
+    public function verfiySign(array $params) : bool
+    {
+        $sign = $params['sign'];
+        unset($params['sign']);
+        $nsign = $this->sign($this->getSignContent($params), $this->signType);
+        return strtolower($sign) === strtolower($nsign) ? true : false;
     }
 }

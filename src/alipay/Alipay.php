@@ -11,6 +11,8 @@ class Alipay
 
     private $bizContent = [];
 
+    private $publicKeyFile = null;
+
     /**
      * Alipay constructor.
      *
@@ -84,7 +86,8 @@ class Alipay
      */
     public function setAlipayPublicKey(string $publicKey) : Alipay
     {
-        $this->aop->alipayrsaPublicKey = $publicKey;
+//        $this->aop->alipayrsaPublicKey = $publicKey;
+        $this->publicKeyFile = $publicKey;
         return $this;
     }
 
@@ -151,5 +154,15 @@ class Alipay
     {
         $this->bizContent['passback_params'] = $params;
         return $this;
+    }
+
+    public function rsaCheckV2(array $params)
+    {
+        return $this->aop->rsaCheckV2($params, $this->publicKeyFile, $this->aop->signType);
+    }
+
+    public function rsaCheckV1(array $params)
+    {
+        return $this->aop->rsaCheckV1($params, $this->publicKeyFile, $this->aop->signType);
     }
 }

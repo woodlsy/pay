@@ -23,8 +23,8 @@ class PullPay
             'partnerid' => $this->mchId,
             'prepayid' => $prepayid,
             'package' => 'Sign=WXPay',
-            'noncestr' => uniqid('', true),
-            'timestamp' => time(),
+            'noncestr' => (string) uniqid('', true),
+            'timestamp' => (string) time(),
         ];
     }
 
