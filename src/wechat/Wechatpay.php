@@ -178,7 +178,7 @@ class Wechatpay
      */
     public function setAmount(int $amount) : Wechatpay
     {
-        $this->obj->body = $amount;
+        $this->obj->totalFee = $amount;
         return $this;
     }
 
