@@ -29,10 +29,11 @@ class PullPay
         } else {
             $params = [
                 'appid' => $this->appId,
-                'noncestr' => (string) uniqid('', true),
-                'timestamp' => (string) time(),
                 'partnerid' => $this->mchId,
                 'prepayid' => $prepayid,
+                'package' => 'Sign=WXPay',
+                'noncestr' => (string) uniqid('', true),
+                'timestamp' => (string) time(),
             ];
         }
         return $params;
