@@ -16,16 +16,26 @@ class PullPay
 
     public $signType = 'HMAC-SHA256'; // 签名类型
 
-    public function getParams(string $prepayid) : array
+    public function getParams(string $prepayid, string $type = 'app') : array
     {
-        return [
-            'appid' => $this->appId,
-            'partnerid' => $this->mchId,
-            'prepayid' => $prepayid,
-            'package' => 'Sign=WXPay',
-            'noncestr' => (string) uniqid('', true),
-            'timestamp' => (string) time(),
-        ];
+        if ('jsapi' === $type) {
+            $params = [
+                'appId' => $this->appId,
+                'nonceStr' => (string) uniqid('', true),
+                'timeStamp' => (string) time(),
+                'package' => 'prepay_id='.$prepayid,
+                'signType' => $this->signType,
+            ];
+        } else {
+            $params = [
+                'appid' => $this->appId,
+                'noncestr' => (string) uniqid('', true),
+                'timestamp' => (string) time(),
+                'partnerid' => $this->mchId,
+                'prepayid' => $prepayid,
+            ];
+        }
+        return $params;
     }
 
 }

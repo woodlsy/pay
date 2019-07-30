@@ -1,6 +1,7 @@
 <?php
 namespace woodlsy\pay\wechat;
 
+use library\Log;
 use woodlsy\httpClient\HttpCurl;
 use woodlsy\pay\wechat\request\PullPay;
 use woodlsy\pay\wechat\request\Unifiedorder;
@@ -11,7 +12,7 @@ class Wechatpay
 
     private $appKey = null; // 商户平台密钥key
 
-    private $obj = null;
+    public $obj = null;
 
     private $config;
 
@@ -49,7 +50,7 @@ class Wechatpay
      * @param string $prepayid
      * @return array
      */
-    public function goPullPay(string $prepayid)
+    public function goPullPay(string $prepayid, string $type = 'app')
     {
         $obj = new PullPay();
         if (isset($this->obj->appId)) {
@@ -59,7 +60,7 @@ class Wechatpay
             $obj->mchId = $this->obj->mchId;
         }
 
-        $params = $obj->getParams($prepayid);
+        $params = $obj->getParams($prepayid, $type);
         $params['sign'] = $this->sign($this->getSignContent($params), $this->obj->signType);
         return $params;
     }
