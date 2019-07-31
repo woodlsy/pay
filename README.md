@@ -3,7 +3,7 @@
 
 **安装**
 ```
-composer require woodlsy/upload
+composer require woodlsy/pay
 ```
 
 ### 一、alipay
