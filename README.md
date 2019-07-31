@@ -1,6 +1,11 @@
 # pay
 微信支付、支付宝支付、连连支付
 
+**安装**
+```
+composer require woodlsy/upload
+```
+
 ### 一、alipay
 - App 发起支付
 ```php
