@@ -18,7 +18,7 @@ class PullPay
 
     public function getParams(string $prepayid, string $type = 'app') : array
     {
-        if ('jsapi' === $type) {
+        if ('JSAPI' === $type) {
             $params = [
                 'appId' => $this->appId,
                 'nonceStr' => (string) uniqid('', true),

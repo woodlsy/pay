@@ -13,6 +13,8 @@ class Alipay
 
     private $publicKeyFile = null;
 
+    private $config;
+
     /**
      * Alipay constructor.
      *
@@ -30,10 +32,12 @@ class Alipay
         $this->aop->gatewayUrl = 'https://openapi.alipay.com/gateway.do';
         $this->aop->signType   = 'RSA2';
 
-        if (null !== $config) {
-            if (isset($config['appId'])) $this->setAppId($config['appId']);
-            if (isset($config['privateKeyFilePath'])) $this->setRsaPrivateKeyFilePath($config['privateKeyFilePath']);
-            if (isset($config['alipayPublicKey'])) $this->setAlipayPublicKey($config['alipayPublicKey']);
+        $this->config = $config;
+
+        if (null !== $this->config) {
+            if (isset($this->config['appId'])) $this->setAppId($this->config['appId']);
+            if (isset($this->config['privateKeyFilePath'])) $this->setRsaPrivateKeyFilePath($this->config['privateKeyFilePath']);
+            if (isset($this->config['alipayPublicKey'])) $this->setAlipayPublicKey($this->config['alipayPublicKey']);
         }
     }
 
@@ -46,6 +50,9 @@ class Alipay
     public function appPay()
     {
         $request = new AlipayTradeAppPayRequest ();
+        if (null !== $this->config) {
+            if (isset($this->config['notify_url']))$request->setNotifyUrl($this->config['notify_url']);
+        }
         $request->setBizContent(json_encode($this->bizContent, JSON_UNESCAPED_UNICODE));
         $result = $this->aop->sdkExecute($request);
         return $result;
@@ -86,7 +93,6 @@ class Alipay
      */
     public function setAlipayPublicKey(string $publicKey) : Alipay
     {
-//        $this->aop->alipayrsaPublicKey = $publicKey;
         $this->publicKeyFile = $publicKey;
         return $this;
     }

@@ -18,6 +18,8 @@ class Wechatpay
 
     private $signType = 'HMAC-SHA256';
 
+    private $sdkType = 'app';
+
     public function __construct(array $config = null)
     {
         $this->config = $config;
@@ -50,7 +52,7 @@ class Wechatpay
      * @param string $prepayid
      * @return array
      */
-    public function goPullPay(string $prepayid, string $type = 'app')
+    public function goPullPay(string $prepayid)
     {
         $obj = new PullPay();
         if (isset($this->obj->appId)) {
@@ -60,7 +62,7 @@ class Wechatpay
             $obj->mchId = $this->obj->mchId;
         }
 
-        $params = $obj->getParams($prepayid, $type);
+        $params = $obj->getParams($prepayid, $this->obj->tradeType);
         $params['sign'] = $this->sign($this->getSignContent($params), $this->obj->signType);
         return $params;
     }
