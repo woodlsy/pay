@@ -5,41 +5,11 @@ namespace woodlsy\pay\alipay;
 use woodlsy\pay\alipay\request\AlipayTradeAppPayRequest;
 use woodlsy\pay\alipay\aop\AopClient;
 
-class Alipay
+class Alipay extends Config
 {
-    private $aop = null;
 
     private $bizContent = [];
 
-    private $publicKeyFile = null;
-
-    private $config;
-
-    /**
-     * Alipay constructor.
-     *
-     * @author woodlsy
-     * @param array|null $config
-     *  [
-     *      'appId' => 'xxxxxxx', // app id
-     *      'privateKeyFilePath' => '/data/alipay/rsa_private_key_pem', // 私钥地址
-     *      'alipayPublicKey' => 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuo2LF+uJ7...' // 公钥字符串
-     * ]
-     */
-    public function __construct(array $config = null)
-    {
-        $this->aop             = new AopClient();
-        $this->aop->gatewayUrl = 'https://openapi.alipay.com/gateway.do';
-        $this->aop->signType   = 'RSA2';
-
-        $this->config = $config;
-
-        if (null !== $this->config) {
-            if (isset($this->config['appId'])) $this->setAppId($this->config['appId']);
-            if (isset($this->config['privateKeyFilePath'])) $this->setRsaPrivateKeyFilePath($this->config['privateKeyFilePath']);
-            if (isset($this->config['alipayPublicKey'])) $this->setAlipayPublicKey($this->config['alipayPublicKey']);
-        }
-    }
 
     /**
      * 生成app支付参数字符串
@@ -49,7 +19,7 @@ class Alipay
      */
     public function appPay()
     {
-        $request = new AlipayTradeAppPayRequest ();
+        $request = new AlipayTradeAppPayRequest();
         if (null !== $this->config) {
             if (isset($this->config['notify_url']))$request->setNotifyUrl($this->config['notify_url']);
         }
@@ -58,44 +28,6 @@ class Alipay
         return $result;
     }
 
-    /**
-     * 设置appId
-     *
-     * @author woodlsy
-     * @param string $appId
-     * @return Alipay
-     */
-    public function setAppId(string $appId) : Alipay
-    {
-        $this->aop->appId = $appId;
-        return $this;
-    }
-
-    /**
-     * 设置私钥地址
-     *
-     * @author woodlsy
-     * @param string $path
-     * @return Alipay
-     */
-    public function setRsaPrivateKeyFilePath(string $path) : Alipay
-    {
-        $this->aop->rsaPrivateKeyFilePath = $path;
-        return $this;
-    }
-
-    /**
-     * 设置支付宝公钥
-     *
-     * @author woodlsy
-     * @param string $publicKey
-     * @return Alipay
-     */
-    public function setAlipayPublicKey(string $publicKey) : Alipay
-    {
-        $this->publicKeyFile = $publicKey;
-        return $this;
-    }
 
     /**
      * 设置加密方式
@@ -162,11 +94,25 @@ class Alipay
         return $this;
     }
 
+    /**
+     * RSA加密验签
+     *
+     * @author woodlsy
+     * @param array $params
+     * @return bool
+     */
     public function rsaCheckV2(array $params)
     {
         return $this->aop->rsaCheckV2($params, $this->publicKeyFile, $this->aop->signType);
     }
 
+    /**
+     * RSA2加密验签
+     *
+     * @author woodlsy
+     * @param array $params
+     * @return bool
+     */
     public function rsaCheckV1(array $params)
     {
         return $this->aop->rsaCheckV1($params, $this->publicKeyFile, $this->aop->signType);

@@ -8,7 +8,9 @@
         "ext-curl": "*",
         "ext-mbstring": "*",
         "php": ">=7.0.0",
-		"woodlsy/http-client": ">=0.1"
+		"woodlsy/http-client": ">=0.1",
+        "ext-libxml": "*",
+        "ext-simplexml": "*"
     },
     "license": "MIT",
     "minimum-stability": "dev",

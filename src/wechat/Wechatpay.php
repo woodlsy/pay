@@ -1,33 +1,13 @@
 <?php
 namespace woodlsy\pay\wechat;
 
-use library\Log;
 use woodlsy\httpClient\HttpCurl;
 use woodlsy\pay\wechat\request\PullPay;
 use woodlsy\pay\wechat\request\Unifiedorder;
 
-class Wechatpay
+class Wechatpay extends Config
 {
-    private $gatewayUrl = 'https://api.mch.weixin.qq.com/pay/'; // 网关地址
-
-    private $appKey = null; // 商户平台密钥key
-
-    public $obj = null;
-
-    private $config;
-
-    private $signType = 'HMAC-SHA256';
-
-    private $sdkType = 'app';
-
-    public function __construct(array $config = null)
-    {
-        $this->config = $config;
-        if (null !== $this->config) {
-            if (isset($this->config['key'])) $this->setAppKey($this->config['key']);
-            if (isset($this->config['sign_type'])) $this->setSignType($this->config['sign_type']);
-        }
-    }
+    protected $gatewayUrl = 'https://api.mch.weixin.qq.com/pay/'; // 网关地址
 
     /**
      * 统一下单
@@ -75,88 +55,6 @@ class Wechatpay
         $res = (new HttpCurl())->setUrl($url)->setData($this->toXml($params))->post();
         $result = $this->fromXml($res);
         return $result;
-    }
-
-    /**
-     * 获取加密前字符串
-     *
-     * @author woodlsy
-     * @param array $params
-     * @return string
-     */
-    public function getSignContent(array $params) : string
-    {
-        ksort($params);
-        $arr = [];
-        foreach ($params as $key => $value) {
-            if (empty($value)) continue;
-            $arr[] = $key.'='.$value;
-        }
-        $arr[] = 'key='.$this->appKey;
-        return implode('&', $arr);
-    }
-
-    /**
-     * 加密
-     *
-     * @author woodlsy
-     * @param string $data
-     * @param string $signType
-     * @return string
-     */
-    public function sign(string $data, string $signType)
-    {
-        switch ($signType) {
-            case 'HMAC-SHA256':
-                return hash_hmac('sha256', $data, $this->appKey);
-                break;
-            case 'MD5':
-                return md5($data);
-                break;
-            default:
-                return '';
-                break;
-        }
-    }
-
-    /**
-     * 设置应用ID
-     *
-     * @author woodlsy
-     * @param string $appId
-     * @return Wechatpay
-     */
-    public function setAppId(string $appId) : Wechatpay
-    {
-        $this->obj->appId = $appId;
-        return $this;
-    }
-
-    /**
-     * 设置商户号
-     *
-     * @author woodlsy
-     * @param string $mchId
-     * @return Wechatpay
-     */
-    public function setMchId(string $mchId) : Wechatpay
-    {
-        $this->obj->mchId = $mchId;
-        return $this;
-    }
-
-    /**
-     * 设置签名类型
-     *
-     * @author woodlsy
-     * @param string $signType
-     * @return Wechatpay
-     */
-    public function setSignType(string $signType) : Wechatpay
-    {
-        $this->obj->signType = $signType;
-        $this->signType = $signType;
-        return $this;
     }
 
     /**
@@ -238,18 +136,6 @@ class Wechatpay
         return $this;
     }
 
-    /**
-     * 设置key
-     *
-     * @author woodlsy
-     * @param string $key
-     * @return Wechatpay
-     */
-    public function setAppKey(string $key) : Wechatpay
-    {
-        $this->appKey = $key;
-        return $this;
-    }
 
     /**
      * 设置支付类型
@@ -262,44 +148,6 @@ class Wechatpay
     {
         $this->obj->tradeType = $tradeType;
         return $this;
-    }
-
-    /**
-     * 参数转为xml
-     *
-     * @author woodlsy
-     * @param array $params
-     * @return string
-     */
-    public function toXml(array $params) : string
-    {
-        $xml = "<xml>";
-        foreach ($params as $key=>$val)
-        {
-            if (is_numeric($val)){
-                $xml.="<".$key.">".$val."</".$key.">";
-            }else{
-                $xml.="<".$key."><![CDATA[".$val."]]></".$key.">";
-            }
-        }
-        $xml.="</xml>";
-        return $xml;
-    }
-
-    /**
-     * xml转换为数组
-     *
-     * @author yls
-     * @param string $xml
-     * @return mixed
-     */
-    public function fromXml(string $xml)
-    {
-        //将XML转为array
-        //禁止引用外部xml实体
-        libxml_disable_entity_loader(true);
-        $values = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
-        return $values;
     }
 
     /**
