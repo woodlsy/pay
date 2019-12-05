@@ -1,6 +1,11 @@
 # pay
 微信支付、支付宝支付
 
+**安装**
+```
+composer require woodlsy/pay
+```
+
 ### 一、alipay
 - 配置
 ```php
@@ -91,3 +96,4 @@ $wechatpay->setTotalFee('9900'); // 原订单总金额，单位分
 $wechatpay->setRefundFee('2000'); // 退款金额
 $refundInfo = $wechatpay->execute(); // $refundInfo为数组
 ```
+
