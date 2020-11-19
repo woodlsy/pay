@@ -89,7 +89,6 @@ if (false === $wechatpay->verfiySign($params)) {
 - 退款
 ```php
 $wechatpay = (new WechatRefund($config));
-$wechatpay->goRefund();
 $wechatpay->setTransactionId('420000038520190801775231'); // 微信交易号
 $wechatpay->setOutRefundNo('201912050101'); // 退款单号
 $wechatpay->setTotalFee('9900'); // 原订单总金额，单位分

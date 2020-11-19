@@ -1,6 +1,8 @@
 <?php
 namespace woodlsy\pay\wechat;
 
+use woodlsy\httpClient\HttpCurl;
+
 class Config
 {
 
@@ -15,6 +17,8 @@ class Config
     protected $sslCert = ''; // 证书路径
 
     protected $sslKey = ''; // 秘钥路径
+
+    protected $gatewayUrl = 'https://api.mch.weixin.qq.com/secapi/pay/'; // 网关地址
 
     public function __construct(array $config = null)
     {
@@ -164,6 +168,15 @@ class Config
         }
         $arr[] = 'key='.$this->appKey;
         return implode('&', $arr);
+    }
+
+    public function execute()
+    {
+        $params         = $this->obj->getParams();
+        $params['sign'] = $this->sign($this->getSignContent($params), $params['sign_type']);
+        $url            = $this->gatewayUrl . $this->obj->getApiMethodName();
+        $res            = (new HttpCurl())->setUrl($url)->setData($this->toXml($params))->setSSLCert($this->sslCert, $this->sslKey)->post();
+        return          $this->fromXml($res);
     }
 
 }

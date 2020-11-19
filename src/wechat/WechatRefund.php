@@ -1,20 +1,22 @@
 <?php
+
 namespace woodlsy\pay\wechat;
 
-use woodlsy\httpClient\HttpCurl;
 use woodlsy\pay\wechat\request\Refund;
 
 class WechatRefund extends Config
 {
-    protected $gatewayUrl = 'https://api.mch.weixin.qq.com/secapi/pay/'; // 网关地址
 
-    public function goRefund()
+    public function __construct(array $config = null)
     {
+        parent::__construct($config);
         $this->obj = new Refund();
 
         if (null !== $this->config) {
-            if (isset($this->config['app_id'])) $this->setAppId($this->config['app_id']);
-            if (isset($this->config['mch_id'])) $this->setMchId($this->config['mch_id']);
+            if (isset($this->config['app_id']))
+                $this->setAppId($this->config['app_id']);
+            if (isset($this->config['mch_id']))
+                $this->setMchId($this->config['mch_id']);
         }
     }
 
@@ -25,7 +27,7 @@ class WechatRefund extends Config
      * @param string $outRefundNo
      * @return $this
      */
-    public function setOutRefundNo(string $outRefundNo)
+    public function setOutRefundNo(string $outRefundNo) : WechatRefund
     {
         $this->obj->outRefundNo = $outRefundNo;
         return $this;
@@ -38,7 +40,7 @@ class WechatRefund extends Config
      * @param string $outTradeNo
      * @return $this
      */
-    public function setOutTradeNo(string $outTradeNo)
+    public function setOutTradeNo(string $outTradeNo) : WechatRefund
     {
         $this->obj->outTradeNo = $outTradeNo;
         return $this;
@@ -51,7 +53,7 @@ class WechatRefund extends Config
      * @param string $transactionId
      * @return $this
      */
-    public function setTransactionId(string $transactionId)
+    public function setTransactionId(string $transactionId) : WechatRefund
     {
         $this->obj->transactionId = $transactionId;
         return $this;
@@ -64,9 +66,35 @@ class WechatRefund extends Config
      * @param int $totalFee
      * @return $this
      */
-    public function setTotalFee(int $totalFee)
+    public function setTotalFee(int $totalFee) : WechatRefund
     {
         $this->obj->totalFee = $totalFee;
+        return $this;
+    }
+
+    /**
+     * 设置子商户号 （服务商模式）
+     *
+     * @author yls
+     * @param string $subMchId
+     * @return $this
+     */
+    public function setSubMchId(string $subMchId) : WechatRefund
+    {
+        $this->obj->subMchId = $subMchId;
+        return $this;
+    }
+
+    /**
+     * 设置子商户app id （服务商模式）
+     *
+     * @author yls
+     * @param string $subAppId
+     * @return $this
+     */
+    public function setSubAppId(string $subAppId) : WechatRefund
+    {
+        $this->obj->subAppId = $subAppId;
         return $this;
     }
 
@@ -77,19 +105,11 @@ class WechatRefund extends Config
      * @param int $refundFee
      * @return $this
      */
-    public function setRefundFee(int $refundFee)
+    public function setRefundFee(int $refundFee) : WechatRefund
     {
         $this->obj->refundFee = $refundFee;
         return $this;
     }
 
-    public function execute()
-    {
-        $params = $this->obj->getParams();
-        $params['sign'] = $this->sign($this->getSignContent($params), $params['sign_type']);
-        $url = $this->gatewayUrl.$this->obj->getApiMethodName();
-        $res = (new HttpCurl())->setUrl($url)->setData($this->toXml($params))->setSSLCert($this->sslCert, $this->sslKey)->post();
-        $result = $this->fromXml($res);
-        return $result;
-    }
+
 }

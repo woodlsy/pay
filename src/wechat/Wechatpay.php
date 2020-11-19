@@ -14,7 +14,7 @@ class Wechatpay extends Config
      *
      * @author woodlsy
      */
-    public function goUnifiedorder()
+    public function goUnifiedorder() : Wechatpay
     {
         $this->obj = new Unifiedorder();
 
@@ -23,6 +23,7 @@ class Wechatpay extends Config
             if (isset($this->config['mch_id'])) $this->setMchId($this->config['mch_id']);
             if (isset($this->config['notify_url'])) $this->setNotifyUrl($this->config['notify_url']);
         }
+        return $this;
     }
 
     /**
@@ -151,17 +152,56 @@ class Wechatpay extends Config
     }
 
     /**
+     * 设置子商户号 （服务商模式）
+     *
+     * @author yls
+     * @param string $subMchId
+     * @return $this
+     */
+    public function setSubMchId(string $subMchId) : Wechatpay
+    {
+        $this->obj->subMchId = $subMchId;
+        return $this;
+    }
+
+    /**
+     * 设置是否指定服务商分账 （服务商模式）
+     *
+     * @author yls
+     * @param string $profitSharing  Y-是，需要分账 N-否，不分账 字母要求大写，不传默认不分账
+     * @return $this
+     */
+    public function setProfitSharing(string $profitSharing) : Wechatpay
+    {
+        $this->obj->profitSharing = $profitSharing;
+        return $this;
+    }
+
+    /**
+     * 设置子商户app id （服务商模式）
+     *
+     * @author yls
+     * @param string $subAppId
+     * @return $this
+     */
+    public function setSubAppId(string $subAppId) : Wechatpay
+    {
+        $this->obj->subAppId = $subAppId;
+        return $this;
+    }
+
+    /**
      * 验签
      *
      * @author yls
      * @param array $params
      * @return bool
      */
-    public function verfiySign(array $params) : bool
+    public function verifySign(array $params) : bool
     {
         $sign = $params['sign'];
         unset($params['sign']);
         $nsign = $this->sign($this->getSignContent($params), $this->signType);
-        return strtolower($sign) === strtolower($nsign) ? true : false;
+        return strtolower($sign) === strtolower($nsign);
     }
 }

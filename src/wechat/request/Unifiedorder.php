@@ -1,4 +1,5 @@
 <?php
+
 namespace woodlsy\pay\wechat\request;
 
 /**
@@ -31,6 +32,10 @@ class Unifiedorder
 
     public $nonceStr = ''; // 随机字符串
 
+    public $subMchId = ''; // 子商户号
+
+    public $profitSharing = 'N'; // 子是否指定服务商分账
+
     public $openId = null;
 
     public function getApiMethodName() : string
@@ -42,20 +47,25 @@ class Unifiedorder
     {
         $this->nonceStr();
 
-        return [
-            'appid' => $this->appId,
-            'mch_id' => $this->mchId,
-            'nonce_str' => $this->nonceStr,
-            'sign_type' => $this->signType,
-            'body' => $this->body,
-            'attach' => $this->attach,
-            'out_trade_no' => $this->outTradeNo,
-            'total_fee' => $this->totalFee,
+        $data = [
+            'appid'            => $this->appId,
+            'mch_id'           => $this->mchId,
+            'nonce_str'        => $this->nonceStr,
+            'sign_type'        => $this->signType,
+            'body'             => $this->body,
+            'attach'           => $this->attach,
+            'out_trade_no'     => $this->outTradeNo,
+            'total_fee'        => $this->totalFee,
             'spbill_create_ip' => $_SERVER['SERVER_ADDR'],
-            'notify_url' => $this->notifyUrl,
-            'trade_type' => $this->tradeType,
-            'openid' => $this->openId,
+            'notify_url'       => $this->notifyUrl,
+            'trade_type'       => $this->tradeType,
+            'openid'           => $this->openId,
+            'profit_sharing'   => $this->profitSharing,
         ];
+        if (!empty($this->subMchId)) {
+            $data['sub_mch_id'] = $this->subMchId;
+        }
+        return $data;
     }
 
     private function nonceStr()

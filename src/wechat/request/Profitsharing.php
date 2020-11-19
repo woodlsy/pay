@@ -1,8 +1,15 @@
 <?php
+declare(strict_types = 1);
 
 namespace woodlsy\pay\wechat\request;
 
-class Refund
+/**
+ * 单次分账
+ *
+ * @author yls
+ * @package woodlsy\pay\wechat\request
+ */
+class Profitsharing
 {
     public $appId = ''; // 应用ID
 
@@ -12,13 +19,7 @@ class Refund
 
     public $nonceStr = ''; // 随机字符串
 
-    public $outRefundNo = ''; // 商户退款单号
-
-    public $outTradeNo = ''; // 商户订单号
-
-    public $totalFee = 0; // 原订单总金额
-
-    public $refundFee = 0; // 退款金额
+    public $outOrderNo = ''; // 商户分账单号
 
     public $subMchId = ''; // 子商户号
 
@@ -26,9 +27,11 @@ class Refund
 
     public $transactionId = ''; // 微信订单号
 
+    public $receivers = []; // 分账接收方列表  {"type": "PERSONAL_OPENID","account":"86693952","amount":888,"description": "分到个人"}
+
     public function getApiMethodName() : string
     {
-        return "refund";
+        return "profitsharing";
     }
 
     public function getParams() : array
@@ -40,11 +43,9 @@ class Refund
             'mch_id'         => $this->mchId,
             'nonce_str'      => $this->nonceStr,
             'sign_type'      => $this->signType,
-            'out_trade_no'   => $this->outTradeNo,
-            'out_refund_no'  => $this->outRefundNo,
             'transaction_id' => $this->transactionId,
-            'total_fee'      => $this->totalFee,
-            'refund_fee'     => $this->refundFee,
+            'out_order_no'   => $this->outOrderNo,
+            'receivers'      => json_encode($this->receivers),
         ];
         if (!empty($this->subMchId)) {
             $data['sub_mch_id'] = $this->subMchId;
