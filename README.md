@@ -81,7 +81,7 @@ if ('SUCCESS' !== (string) $res['return_code'] || 'SUCCESS' !== (string) $res['r
 - 异步通知回调
 ```php
 $wechatpay = (new Wechatpay($config));
-if (false === $wechatpay->verfiySign($params)) {
+if (false === $wechatpay->verifySign($params)) {
     echo '验签失败';
 }
 ```
