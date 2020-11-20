@@ -57,4 +57,17 @@ class WechatProfitSharingFinish extends Config
         $this->obj->description = $description;
         return $this;
     }
+
+    /**
+     * 设置子商户号 （服务商模式）
+     *
+     * @author yls
+     * @param string $subMchId
+     * @return $this
+     */
+    public function setSubMchId(string $subMchId) : WechatProfitSharingFinish
+    {
+        $this->obj->subMchId = $subMchId;
+        return $this;
+    }
 }

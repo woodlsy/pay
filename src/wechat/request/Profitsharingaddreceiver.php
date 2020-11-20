@@ -3,6 +3,12 @@ declare(strict_types = 1);
 
 namespace woodlsy\pay\wechat\request;
 
+/**
+ * 添加分账接收方
+ *
+ * @author yls
+ * @package woodlsy\pay\wechat\request
+ */
 class Profitsharingaddreceiver
 {
     public $appId = ''; // 应用ID
@@ -13,13 +19,9 @@ class Profitsharingaddreceiver
 
     public $nonceStr = ''; // 随机字符串
 
-    public $outOrderNo = ''; // 商户分账单号
-
     public $subMchId = ''; // 子商户号
 
     public $subAppId = ''; // 子商户AppId
-
-    public $transactionId = ''; // 微信订单号
 
     /**
      * type 必填  MERCHANT_ID：商户号（mch_id或者sub_mch_id）
@@ -50,7 +52,7 @@ class Profitsharingaddreceiver
      *
      * @var array
      */
-    public $receivers = []; // 分账接收方列表  {"type": "PERSONAL_OPENID","account":"86693952","amount":888,"description": "分到个人"}
+    public $receiver = []; // 分账接收方
 
     public function getApiMethodName() : string
     {
@@ -66,9 +68,7 @@ class Profitsharingaddreceiver
             'mch_id'         => $this->mchId,
             'nonce_str'      => $this->nonceStr,
             'sign_type'      => $this->signType,
-            'transaction_id' => $this->transactionId,
-            'out_order_no'   => $this->outOrderNo,
-            'receivers'      => json_encode($this->receivers),
+            'receiver'      => json_encode($this->receiver),
         ];
         if (!empty($this->subMchId)) {
             $data['sub_mch_id'] = $this->subMchId;

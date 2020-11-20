@@ -20,28 +20,28 @@ class WechatProfitSharingAddReceiver extends Config
     }
 
     /**
-     * 设置微信订单号
+     * 设置子商户号 （服务商模式）
      *
-     * @author woodlsy
-     * @param string $transactionId
+     * @author yls
+     * @param string $subMchId
      * @return $this
      */
-    public function setTransactionId(string $transactionId):WechatProfitSharingAddReceiver
+    public function setSubMchId(string $subMchId) : WechatProfitSharingAddReceiver
     {
-        $this->obj->transactionId = $transactionId;
+        $this->obj->subMchId = $subMchId;
         return $this;
     }
 
     /**
-     * 设置分账单号
+     * 设置子商户app id （服务商模式）
      *
-     * @author woodlsy
-     * @param string $outOrderNo
+     * @author yls
+     * @param string $subAppId
      * @return $this
      */
-    public function setOutOrderNo(string $outOrderNo) : WechatProfitSharingAddReceiver
+    public function setSubAppId(string $subAppId) : WechatProfitSharingAddReceiver
     {
-        $this->obj->outOrderNo = $outOrderNo;
+        $this->obj->subAppId = $subAppId;
         return $this;
     }
 
@@ -51,13 +51,12 @@ class WechatProfitSharingAddReceiver extends Config
      *  [
      *      "type" => "MERCHANT_ID",
      *      "account" => "190001001",
-     *      "amount" => 100,
      *      "name" => "蚂蚁探路"
      *      "relation_type" => "SERVICE_PROVIDER",
+     *      "custom_relation" => "子商户与接收方具体的关系"
      *  ],
      *  [
      *      "type" => "PERSONAL_OPENID",
-     *      "account" => "86693952",
      *      "amount" => 100,
      *      "relation_type" => "USER",
      *  ]
@@ -65,12 +64,12 @@ class WechatProfitSharingAddReceiver extends Config
      *
      *
      * @author yls
-     * @param array $receivers
+     * @param array $receiver
      * @return $this
      */
-    public function setReceivers(array $receivers) : WechatProfitSharingAddReceiver
+    public function setReceiver(array $receiver) : WechatProfitSharingAddReceiver
     {
-        $this->obj->receivers[] = $receivers;
+        $this->obj->receiver = $receiver;
         return $this;
     }
 }

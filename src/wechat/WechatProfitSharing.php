@@ -96,4 +96,30 @@ class WechatProfitSharing extends Config
         $this->obj->receivers[] = $receivers;
         return $this;
     }
+
+    /**
+     * 设置子商户号 （服务商模式）
+     *
+     * @author yls
+     * @param string $subMchId
+     * @return $this
+     */
+    public function setSubMchId(string $subMchId) : WechatProfitSharing
+    {
+        $this->obj->subMchId = $subMchId;
+        return $this;
+    }
+
+    /**
+     * 设置子商户app id （服务商模式）
+     *
+     * @author yls
+     * @param string $subAppId
+     * @return $this
+     */
+    public function setSubAppId(string $subAppId) : WechatProfitSharing
+    {
+        $this->obj->subAppId = $subAppId;
+        return $this;
+    }
 }
