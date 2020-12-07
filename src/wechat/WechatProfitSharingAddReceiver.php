@@ -47,20 +47,18 @@ class WechatProfitSharingAddReceiver extends Config
 
     /**
      * 设置分账接收方列表
-     * [
      *  [
      *      "type" => "MERCHANT_ID",
      *      "account" => "190001001",
      *      "name" => "蚂蚁探路"
      *      "relation_type" => "SERVICE_PROVIDER",
      *      "custom_relation" => "子商户与接收方具体的关系"
-     *  ],
+     *  ]
      *  [
      *      "type" => "PERSONAL_OPENID",
      *      "amount" => 100,
      *      "relation_type" => "USER",
      *  ]
-     * ]
      *
      *
      * @author yls

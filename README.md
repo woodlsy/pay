@@ -12,7 +12,7 @@ composer require woodlsy/pay
 $alipayConfig = [
     'appId' => '2016615151551515',
     'privateKeyFilePath' => '/config/rsa/alipay/rsa_private_key.pem', // 私钥地址
-    'alipayPublicKey' => 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuo2LF+uJ7D+3Qb6PwFU2....' // 阿里公钥
+    'alipayPublicKey' => 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuo2LF+uJ7D+3Qb6PwFU2....', // 阿里公钥
     'notify_url' => 'https://xxxxxx.com/pay/notify/alipay.json',
     'sigin_type' => 'RSA2',
 ];
@@ -72,6 +72,10 @@ $wechatpay->setOutTradeNo(xxxxxxxxxx);
 $wechatpay->setOpenId('openid');
 $wechatpay->setTradeType('JSAPI');
 /*******若是JSAPI发起支付 end*********/      
+/*******若是服务商分账模式发起支付 start*********/
+$wechatpay->setProfitSharing('Y'); // 分账标记
+$wechatpay->setSubMchId('xxxxxxxxx'); // 子商户号
+/*******若是服务商分账模式发起支付 end*********/ 
 $res = $wechatpay->appPay();
 if ('SUCCESS' !== (string) $res['return_code'] || 'SUCCESS' !== (string) $res['result_code']) {
     echo '发起支付失败';
@@ -93,6 +97,49 @@ $wechatpay->setTransactionId('420000038520190801775231'); // 微信交易号
 $wechatpay->setOutRefundNo('201912050101'); // 退款单号
 $wechatpay->setTotalFee('9900'); // 原订单总金额，单位分
 $wechatpay->setRefundFee('2000'); // 退款金额
+/*******若是服务商分账模式发起支付 start*********/
+$wechatpay->setSubMchId('xxxxxxxxx'); // 子商户号
+/*******若是服务商分账模式发起支付 end*********/ 
 $refundInfo = $wechatpay->execute(); // $refundInfo为数组
+```
+
+- 服务商分账
+```php
+// 添加分账方
+$wechatpay = (new WechatProfitSharingAddReceiver($config));
+$wechatpay->setSubMchId('sub_mch_id'); // 子商户号
+$wechatpay->setReceiver($receiver); // 分账接收方数据，格式看方法注释
+$resultInfo = $wechatpay->execute();
+
+// 发起分账
+$wechatpay = (new WechatProfitSharing($config));
+/*******单次分账 start*********/
+$wechatpay->goProfitSharing();
+/*******单次分账 end*********/
+/*******多次分账 start*********/
+$wechatpay->goMultiProfitSharing();
+/*******多次分账 end*********/
+$wechatpay->setTransactionId('420000038520190801775231'); // 微信交易号
+$wechatpay->setOutRefundNo('201912050101'); // 设置分账单号
+$wechatpay->setSubMchId('sub_mch_id'); // 子商户号
+foreach ($receivers as $receiver) {
+    $wechatpay->setReceivers($receiver); // 分账接收方
+}
+$resultInfo = $wechatpay->execute();
+
+// 完成分账，只限于多次分账
+$wechatpay = (new WechatProfitSharingFinish($config));
+$wechatpay->setTransactionId('420000038520190801775231'); // 微信交易号
+$wechatpay->setOutRefundNo('201912050101'); // 设置分账单号
+$wechatpay->setSubMchId('sub_mch_id'); // 子商户号
+$wechatpay->setDescription('woodlsy'); // 分账完结的原因描述
+$resultInfo = $wechatpay->execute();
+
+// 分账结果查询
+$wechatpay = (new WechatProfitSharingQuery($config));
+$wechatpay->setTransactionId('420000038520190801775231'); // 微信交易号
+$wechatpay->setOutRefundNo('201912050101'); // 分账单号
+$wechatpay->setSubMchId('sub_mch_id'); // 子商户号
+$resultInfo = $wechatpay->execute();
 ```
 
