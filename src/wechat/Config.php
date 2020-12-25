@@ -160,6 +160,7 @@ class Config
      */
     public function getSignContent(array $params) : string
     {
+        unset($params['sign_type']);
         ksort($params);
         $arr = [];
         foreach ($params as $key => $value) {
