@@ -1,4 +1,5 @@
 <?php
+
 namespace woodlsy\pay\wechat;
 
 use woodlsy\httpClient\HttpCurl;
@@ -20,12 +21,17 @@ class Config
 
     protected $gatewayUrl = 'https://api.mch.weixin.qq.com/secapi/pay/'; // 网关地址
 
+    public static $lastUrl;
+    public static $lastParams;
+
     public function __construct(array $config = null)
     {
         $this->config = $config;
         if (null !== $this->config) {
-            if (isset($this->config['key'])) $this->setAppKey($this->config['key']);
-            if (isset($this->config['sign_type'])) $this->setSignType($this->config['sign_type']);
+            if (isset($this->config['key']))
+                $this->setAppKey($this->config['key']);
+            if (isset($this->config['sign_type']))
+                $this->setSignType($this->config['sign_type']);
 
             if (isset($this->config['SSLCert']) && !empty($this->config['SSLCert'])) {
                 $this->sslCert = $this->config['SSLCert'];
@@ -60,7 +66,7 @@ class Config
     public function setSignType(string $signType)
     {
         $this->obj->signType = $signType;
-        $this->signType = $signType;
+        $this->signType      = $signType;
         return $this;
     }
 
@@ -123,15 +129,14 @@ class Config
     public function toXml(array $params) : string
     {
         $xml = "<xml>";
-        foreach ($params as $key=>$val)
-        {
-            if (is_numeric($val)){
-                $xml.="<".$key.">".$val."</".$key.">";
-            }else{
-                $xml.="<".$key."><![CDATA[".$val."]]></".$key.">";
+        foreach ($params as $key => $val) {
+            if (is_numeric($val)) {
+                $xml .= "<" . $key . ">" . $val . "</" . $key . ">";
+            } else {
+                $xml .= "<" . $key . "><![CDATA[" . $val . "]]></" . $key . ">";
             }
         }
-        $xml.="</xml>";
+        $xml .= "</xml>";
         return $xml;
     }
 
@@ -160,24 +165,29 @@ class Config
      */
     public function getSignContent(array $params) : string
     {
-        unset($params['sign_type']);
+        if ('MD5' === $params['sign_type']) {
+            unset($params['sign_type']);
+        }
         ksort($params);
         $arr = [];
         foreach ($params as $key => $value) {
-            if (empty($value)) continue;
-            $arr[] = $key.'='.$value;
+            if (empty($value))
+                continue;
+            $arr[] = $key . '=' . $value;
         }
-        $arr[] = 'key='.$this->appKey;
+        $arr[] = 'key=' . $this->appKey;
         return implode('&', $arr);
     }
 
     public function execute()
     {
-        $params         = $this->obj->getParams();
-        $params['sign'] = $this->sign($this->getSignContent($params), $params['sign_type']);
-        $url            = $this->gatewayUrl . $this->obj->getApiMethodName();
-        $res            = (new HttpCurl())->setUrl($url)->setData($this->toXml($params))->setSSLCert($this->sslCert, $this->sslKey)->post();
-        return          $this->fromXml($res);
+        $params           = $this->obj->getParams();
+        $params['sign']   = $this->sign($this->getSignContent($params), $params['sign_type']);
+        $url              = $this->gatewayUrl . $this->obj->getApiMethodName();
+        self::$lastParams = $params;
+        self::$lastUrl    = $url;
+        $res              = (new HttpCurl())->setUrl($url)->setData($this->toXml($params))->setSSLCert($this->sslCert, $this->sslKey)->post();
+        return $this->fromXml($res);
     }
 
 }

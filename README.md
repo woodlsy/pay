@@ -143,3 +143,14 @@ $wechatpay->setSubMchId('sub_mch_id'); // 子商户号
 $resultInfo = $wechatpay->execute();
 ```
 
+- 企业付款
+```php
+// 付款到零用钱
+(new WechatMmpaymkttransfersPromotionTransfers($config))
+->setOpenId('xxxxxxxxx')
+->setAmount(8800)
+->setPartnerTradeNo('f202012251503')
+->setDesc('测试')
+->setRUserName('张三')
+->execute();
+```
