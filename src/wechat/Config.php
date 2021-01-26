@@ -165,7 +165,7 @@ class Config
      */
     public function getSignContent(array $params) : string
     {
-        if ('MD5' === $params['sign_type']) {
+        if (isset($params['sign_type']) && 'MD5' === $params['sign_type']) {
             unset($params['sign_type']);
         }
         ksort($params);
