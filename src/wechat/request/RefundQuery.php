@@ -39,7 +39,7 @@ class RefundQuery
     {
         $this->nonceStr();
 
-        return [
+        $data = [
             'appid'          => $this->appId,
             'mch_id'         => $this->mchId,
             'nonce_str'      => $this->nonceStr,
@@ -48,8 +48,11 @@ class RefundQuery
             'out_refund_no'  => $this->outRefundNo,
             'transaction_id' => $this->transactionId,
             'refund_id'      => $this->refundId,
-            'offset'         => $this->offset,
         ];
+        if (!empty($this->offset)) {
+            $data['offset'] = $this->offset;
+        }
+        return $data;
     }
 
     private function nonceStr()
