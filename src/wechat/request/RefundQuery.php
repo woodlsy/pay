@@ -32,7 +32,7 @@ class RefundQuery
 
     public function getApiMethodName() : string
     {
-        return "refund";
+        return "/pay/refundquery";
     }
 
     public function getParams() : array
@@ -44,13 +44,24 @@ class RefundQuery
             'mch_id'         => $this->mchId,
             'nonce_str'      => $this->nonceStr,
             'sign_type'      => $this->signType,
-            'out_trade_no'   => $this->outTradeNo,
-            'out_refund_no'  => $this->outRefundNo,
-            'transaction_id' => $this->transactionId,
-            'refund_id'      => $this->refundId,
         ];
+        if (!empty($this->outTradeNo)) {
+            $data['out_trade_no'] = $this->outTradeNo;
+        }
+        if (!empty($this->outRefundNo)) {
+            $data['out_refund_no'] = $this->outRefundNo;
+        }
+        if (!empty($this->transactionId)) {
+            $data['transaction_id'] = $this->transactionId;
+        }
+        if (!empty($this->refundId)) {
+            $data['refund_id'] = $this->refundId;
+        }
         if (!empty($this->offset)) {
             $data['offset'] = $this->offset;
+        }
+        if (!empty($this->subMchId)) {
+            $data['sub_mch_id'] = $this->subMchId;
         }
         return $data;
     }

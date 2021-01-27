@@ -19,7 +19,8 @@ class Config
 
     protected $sslKey = ''; // 秘钥路径
 
-    protected $gatewayUrl = 'https://api.mch.weixin.qq.com/secapi/pay/'; // 网关地址
+    protected $gatewayHost = 'https://api.mch.weixin.qq.com'; // 网关域名
+    protected $gatewayUrl = '/secapi/pay/'; // 网关地址
 
     public static $lastUrl;
     public static $lastParams;
@@ -183,7 +184,8 @@ class Config
     {
         $params           = $this->obj->getParams();
         $params['sign']   = $this->sign($this->getSignContent($params), $params['sign_type']);
-        $url              = $this->gatewayUrl . $this->obj->getApiMethodName();
+        $actionUrl = $this->obj->getApiMethodName();
+        $url              = $this->gatewayHost . ('/' === substr($actionUrl, 0, 1) ? '' : $this->gatewayUrl) . $actionUrl;
         self::$lastParams = $params;
         self::$lastUrl    = $url;
         $res              = (new HttpCurl())->setUrl($url)->setData($this->toXml($params))->setSSLCert($this->sslCert, $this->sslKey)->post();
