@@ -7,7 +7,6 @@ use woodlsy\pay\wechat\request\MmpaymkttransfersPromotionTransfers;
 
 class WechatMmpaymkttransfersPromotionTransfers extends Config
 {
-    protected $gatewayUrl = 'https://api.mch.weixin.qq.com/'; // 网关地址
 
     public function __construct(array $config = null)
     {
