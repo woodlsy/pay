@@ -32,7 +32,7 @@ class MmpaymkttransfersPromotionTransfers
 
     public function getApiMethodName() : string
     {
-        return "mmpaymkttransfers/promotion/transfers";
+        return "/mmpaymkttransfers/promotion/transfers";
     }
 
     public function getParams() : array
